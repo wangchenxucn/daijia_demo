@@ -20,7 +20,7 @@ public class WxConfigOperator {
 
         WxMaDefaultConfigImpl config = new WxMaDefaultConfigImpl();
         config.setAppid(wxConfigProperties.getAppId());
-        config.setSecret(wxConfigProperties.getAppSecret());
+        config.setSecret(wxConfigProperties.getSecret());
 
         WxMaService wxMaService = new WxMaServiceImpl();
         wxMaService.setWxMaConfig(config);
