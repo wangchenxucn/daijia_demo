@@ -64,4 +64,17 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerLoginVo customerLoginVo = customerLoginVoResult.getData();
         return customerLoginVo;
     }
+
+    @Override
+    public CustomerLoginVo getCustomerInfo(Long customerId) {
+
+        //根据用户id远程调用接口获取用户信息
+        Result<CustomerLoginVo> customerLoginVoResult = customerInfoFeignClient.getCustomerLoginInfo(customerId);
+        if(customerLoginVoResult.getCode()!=200){
+            throw new GuiguException(ResultCodeEnum.AUTH_ERROR);
+        }
+
+        CustomerLoginVo customerLoginVo = customerLoginVoResult.getData();
+        return customerLoginVo;
+    }
 }

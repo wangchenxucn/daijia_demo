@@ -9,4 +9,6 @@ public interface CustomerService {
     String login(String code);
 
     CustomerLoginVo getCustomerLoginInfo(String token);
+
+    CustomerLoginVo getCustomerInfo(Long customerId);
 }

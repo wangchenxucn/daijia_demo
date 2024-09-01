@@ -1,6 +1,8 @@
 package com.atguigu.daijia.customer.controller;
 
+import com.atguigu.daijia.common.login.Login;
 import com.atguigu.daijia.common.result.Result;
+import com.atguigu.daijia.common.util.AuthContextHolder;
 import com.atguigu.daijia.customer.client.CustomerInfoFeignClient;
 import com.atguigu.daijia.customer.service.CustomerService;
 import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
@@ -32,13 +34,27 @@ public class CustomerController {
         return Result.ok(customerInfoService.login(code));
     }
 
+//    @Operation(summary = "获取客户登录信息")
+//    @Login
+//    @GetMapping("/getCustomerLoginInfo")
+//    public Result<CustomerLoginVo> getCustomerLoginInfo(HttpServletRequest request) {
+//        //从请求头中获取token
+//        String token = request.getHeader("token");
+//        //调用service
+//        CustomerLoginVo customerLoginVo = customerInfoService.getCustomerLoginInfo(token);
+//        return Result.ok(customerLoginVo);
+//    }
+
     @Operation(summary = "获取客户登录信息")
+    @Login
     @GetMapping("/getCustomerLoginInfo")
-    public Result<CustomerLoginVo> getCustomerLoginInfo(HttpServletRequest request) {
-        //从请求头中获取token
-        String token = request.getHeader("token");
+    public Result<CustomerLoginVo> getCustomerLoginInfo() {
+
+        Long customerId = AuthContextHolder.getUserId();
+
         //调用service
-        CustomerLoginVo customerLoginVo = customerInfoService.getCustomerLoginInfo(token);
+        CustomerLoginVo customerLoginVo = customerInfoService.getCustomerInfo(customerId);
+
         return Result.ok(customerLoginVo);
     }
 
