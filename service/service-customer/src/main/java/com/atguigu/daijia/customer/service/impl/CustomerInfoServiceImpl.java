@@ -7,10 +7,12 @@ import com.atguigu.daijia.customer.mapper.CustomerLoginLogMapper;
 import com.atguigu.daijia.customer.service.CustomerInfoService;
 import com.atguigu.daijia.model.entity.customer.CustomerInfo;
 import com.atguigu.daijia.model.entity.customer.CustomerLoginLog;
+import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,5 +63,24 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         return customerInfo.getId();
 
 
+    }
+    //获取用户登录信息
+    @Override
+    public CustomerLoginVo getCustomerInfo(Long customerId) {
+
+        CustomerInfo customerInfo = customerInfoMapper.selectById(customerId);
+        CustomerLoginVo customerLoginVo = new CustomerLoginVo();
+//        customerLoginVo.setWxOpenId(customerInfo.getWxOpenId());
+//        customerLoginVo.setNickname(customerInfo.getNickname());
+//        customerLoginVo.setAvatarUrl(customerInfo.getAvatarUrl());
+        BeanUtils.copyProperties(customerInfo,customerLoginVo);
+        if(customerInfo.getPhone()!=null&&!"".equals(customerInfo.getPhone())){
+            customerLoginVo.setIsBindPhone(true);
+        }
+        else {
+            customerLoginVo.setIsBindPhone(false);
+        }
+
+        return customerLoginVo;
     }
 }
