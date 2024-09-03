@@ -351,3 +351,14 @@ api控制页面中的方法调用后端哪个接口
 3. 年度趋势分析 点项目下钻   展示趋势  趋势范围：每月和往前滚动4周两个趋势图
    分任务NEW 和缺陷 用单选框4合2![alt text](image-27.png)
 4. 数据筛选：缺陷/需求/待办    可多选  --缺陷（ Bug）        维度分析： 按BG查找 ； 按系统查找![alt text](image-28.png)
+
+# 项目总体图
+
+![alt text](image-29.png)
+![alt text](image-30.png)
+![alt text](image-31.png)
+![alt text](image-32.png)
+![alt text](image-33.png)
+![alt text](image-34.png)
+![alt text](image-35.png)
+![alt text](image-36.png)
