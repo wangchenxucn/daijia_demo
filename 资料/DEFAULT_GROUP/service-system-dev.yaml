@@ -9,7 +9,7 @@ spring:
   cloud:
     sentinel:
       transport:
-        dashboard: localhost:8080
+        dashboard: 113.45.134.130:8080
     openfeign:
       lazy-attributes-resolution: true
       client:
@@ -20,7 +20,7 @@ spring:
             loggerLevel: basic
   data:
     redis:
-      host: localhost
+      host: 113.45.134.130
       port: 6379
       database: 0
       timeout: 1800000

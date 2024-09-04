@@ -24,7 +24,7 @@ spring:
     publisher-returns: true
   data:
     redis:
-      host: localhost
+      host: 113.45.134.130
       port: 6379
       database: 0
       timeout: 1800000
