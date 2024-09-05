@@ -22,8 +22,8 @@
             <artifactId>cos_api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
         </dependency>
     </dependencies>
 
