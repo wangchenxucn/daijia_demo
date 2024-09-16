@@ -63,6 +63,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
     @Autowired
     private TencentCloudProperties tencentCloudProperties;
 
+
     @Override
     public Long login(String code) {
         try {
@@ -189,5 +190,13 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
             return false;
         }
         return true;
+    }
+
+    @Override
+    public DriverSet getDriverSet(Long driverId) {
+        LambdaQueryWrapper<DriverSet> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DriverSet::getDriverId, driverId);
+        DriverSet driverSet = driverSetMapper.selectOne(queryWrapper);
+        return driverSet;
     }
 }
