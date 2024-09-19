@@ -3,6 +3,7 @@ package com.atguigu.daijia.order.controller;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.model.entity.order.OrderInfo;
 import com.atguigu.daijia.model.form.order.OrderInfoForm;
+import com.atguigu.daijia.model.form.order.UpdateOrderCartForm;
 import com.atguigu.daijia.model.vo.order.CurrentOrderInfoVo;
 import com.atguigu.daijia.order.service.OrderInfoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,6 +57,17 @@ public class OrderInfoController {
     public Result<OrderInfo> getOrderInfo(@PathVariable Long orderId) {
         return Result.ok(orderInfoService.getById(orderId));
     }
+    @Operation(summary = "司机到达起始点")
+    @GetMapping("/driverArriveStartLocation/{orderId}/{driverId}")
+    public Result<Boolean> driverArriveStartLocation(@PathVariable Long orderId, @PathVariable Long driverId) {
+        return Result.ok(orderInfoService.driverArriveStartLocation(orderId, driverId));
+    }
+    @Operation(summary = "更新代驾车辆信息")
+    @PostMapping("/updateOrderCart")
+    public Result<Boolean> updateOrderCart(@RequestBody UpdateOrderCartForm updateOrderCartForm) {
+        return Result.ok(orderInfoService.updateOrderCart(updateOrderCartForm));
+    }
+
 
 }
 

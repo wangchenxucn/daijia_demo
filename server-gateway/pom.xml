@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>daijia-demo</artifactId>
+		<artifactId>daijia_demo</artifactId>
 		<groupId>com.atguigu.daijia</groupId>
 		<version>1.0</version>
 	</parent>
