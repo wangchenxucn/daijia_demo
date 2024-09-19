@@ -12,6 +12,8 @@ import com.atguigu.daijia.order.mapper.OrderStatusLogMapper;
 import com.atguigu.daijia.order.service.OrderInfoService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,7 +32,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private OrderInfoMapper orderInfoMapper;
     @Autowired
     private OrderStatusLogMapper orderStatusLogMapper;
-
+    @Autowired
+    private RedissonClient redissonClient;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -88,22 +91,45 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             //抢单失败
             throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
         }
-        //抢单
-        LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(OrderInfo::getId, orderId);
-        OrderInfo orderInfo = orderInfoMapper.selectOne(queryWrapper);
-        //设置值
-        orderInfo.setDriverId(driverId);
-        orderInfo.setAcceptTime(new Date());
-        orderInfo.setStatus(2);
-        int i = orderInfoMapper.updateById(orderInfo);
+        //创建锁
+        RLock lock = redissonClient.getLock(RedisConstant.ROB_NEW_ORDER_LOCK + orderId);
+        try {
+            boolean b = lock.tryLock(10, 5, TimeUnit.SECONDS);
+            if (b) {
+                //判断订单是否存在
+                if(!redisTemplate.hasKey(RedisConstant.ORDER_ACCEPT_MARK)){
+                    //抢单失败
+                    throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+                }
+                //抢单
+                LambdaQueryWrapper<OrderInfo> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(OrderInfo::getId, orderId);
+                OrderInfo orderInfo = orderInfoMapper.selectOne(queryWrapper);
+                //设置值
+                orderInfo.setDriverId(driverId);
+                orderInfo.setAcceptTime(new Date());
+                orderInfo.setStatus(2);
+                int i = orderInfoMapper.updateById(orderInfo);
 
-        if(i != 1){
+                if(i != 1){
+                    throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
+                }
+
+                //删除标识
+                redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
+            }
+
+
+        }catch (Exception e){
             throw new GuiguException(ResultCodeEnum.COB_NEW_ORDER_FAIL);
-        }
 
-        //删除标识
-        redisTemplate.delete(RedisConstant.ORDER_ACCEPT_MARK);
+        }finally {
+            //释放
+            if(lock.isLocked()){
+                lock.unlock();
+            }
+
+        }
 
         return true;
     }
