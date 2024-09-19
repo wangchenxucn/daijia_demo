@@ -21,6 +21,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private NewOrderFeignClient newOrderFeignClient;
 
+
     @Override
     public Integer getOrderStatus(Long orderId) {
         return orderInfoFeignClient.getOrderStatus(orderId).getData();
@@ -29,5 +30,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<NewOrderDataVo> findNewOrderQueueData(Long driverId) {
         return newOrderFeignClient.findNewOrderQueueData(driverId).getData();
+    }
+
+    @Override
+    public Boolean robNewOrder(Long driverId, Long orderId) {
+        return orderInfoFeignClient.robNewOrder(driverId, orderId).getData();
     }
 }
